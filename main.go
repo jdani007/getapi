@@ -75,7 +75,7 @@ func main() {
 	}
 	fmt.Printf("-----------------------\n\n")
 
-		for _, v := range record.Features {
+	for _, v := range record.Features {
 		fmt.Println(v.Geometry.Coordinates)
 	}
 
