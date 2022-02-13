@@ -1,3 +1,6 @@
+//Lesson I was learning in Python and wanted to recreate it in Go.
+
+
 package main
 
 import (
