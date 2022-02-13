@@ -6,11 +6,20 @@ import (
 	"net/http"
 )
 
+type geometry struct {
+	Type string
+	Coordinates []float64
+	ID string
+}
+
 type earthquake struct {
 	Metadata map[string]interface{}
+	Bbox []float64
 	Features []struct {
 		Properties map[string]interface{}
+		Geometry geometry
 	}
+
 }
 
 func main() {
@@ -27,17 +36,23 @@ func main() {
 		fmt.Println(err)
 	}
 
+	fmt.Println(record.Bbox)
+	fmt.Printf("-----------------------\n\n")
 	
+
 	fmt.Println(record.Metadata["title"])
 	fmt.Printf("-----------------------\n\n")
 
+
 	fmt.Println(record.Metadata["count"])
 	fmt.Printf("-----------------------\n\n")
+
 
 	for _, v := range record.Features {
 		fmt.Println(v.Properties["place"])
 	}
 	fmt.Printf("-----------------------\n\n")
+
 
 	for _, v := range record.Features {
 		if v.Properties["mag"].(float64) >= 4.0 {
@@ -56,5 +71,9 @@ func main() {
 		}
 	}
 	fmt.Printf("-----------------------\n\n")
+
+		for _, v := range record.Features {
+		fmt.Println(v.Geometry.Coordinates)
+	}
 
 }
