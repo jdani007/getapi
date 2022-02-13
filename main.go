@@ -1,38 +1,60 @@
 package main
 
 import (
-"fmt"
-"encoding/json"
-"net/http"
+	"encoding/json"
+	"fmt"
+	"net/http"
 )
 
-type person struct {
-	Data []struct {
-		ID int `json:"id"`
-		Email string `json:"email"`
-		FirstName string `json:"first_name"`
-		LastName string `json:"last_name"`
-		Avatar string `json:"avatar"`
+type earthquake struct {
+	Metadata map[string]interface{}
+	Features []struct {
+		Properties map[string]interface{}
 	}
 }
 
-
 func main() {
-	resp, err := http.Get("https://reqres.in/api/users/")
+	resp, err := http.Get("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson")
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer resp.Body.Close()
 
-	var record person
+	var record earthquake
 
 	err = json.NewDecoder(resp.Body).Decode(&record)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	for i ,v := range record.Data {
-		fmt.Println(i, "Name:", v.FirstName, v.LastName)
+	
+	fmt.Println(record.Metadata["title"])
+	fmt.Printf("-----------------------\n\n")
+
+	fmt.Println(record.Metadata["count"])
+	fmt.Printf("-----------------------\n\n")
+
+	for _, v := range record.Features {
+		fmt.Println(v.Properties["place"])
 	}
+	fmt.Printf("-----------------------\n\n")
+
+	for _, v := range record.Features {
+		if v.Properties["mag"].(float64) >= 4.0 {
+			fmt.Println(v.Properties["place"])
+		}
+	}
+	fmt.Printf("-----------------------\n\n")
+
+
+	for _, v := range record.Features {
+		felt := v.Properties["felt"]
+		if felt != nil {
+			if felt.(float64) > 0 {
+				fmt.Println(v.Properties["place"], felt, "times")
+			}
+		}
+	}
+	fmt.Printf("-----------------------\n\n")
 
 }
