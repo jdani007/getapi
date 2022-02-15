@@ -1,4 +1,4 @@
-//Lesson I was learning in Python and wanted to recreate it in Go.
+
 
 package main
 
@@ -24,35 +24,46 @@ type earthquake struct {
 
 }
 
-func (e earthquake)getMetadata(m string) interface{}{
-	return e.Metadata[m]
+func (e earthquake)getMetadata(m string){
+	fmt.Println(e.Metadata[m])
+	fmt.Println()
 }
 
-func (e earthquake)getPlaces() string {
-	var place string
+func (e earthquake)getPlaces() {
 	for _, v := range e.Features {
-		place = place + "\n" + v.Properties["place"].(string)
+		fmt.Println(v.Properties["place"].(string)) 
 	}
-	return place
+	fmt.Println()
 }
 
-func (e earthquake)getMagnitude(mag float64) interface{} {
-	var place string
+func (e earthquake)getMagnitude(mag float64){
 	for _, v := range e.Features {
 		if v.Properties["mag"].(float64) >= mag {
-			place = place + "\n" + v.Properties["place"].(string)
+			fmt.Println(v.Properties["place"].(string))
 		}
 	}
-	return place
+	fmt.Println()
+
 }
 
-func(e earthquake)getCoordinates() string {
-	var coord string
+func (e earthquake) getFelt() {
 	for _, v := range e.Features {
-		coord = coord + "\n" + fmt.Sprint(v.Geometry.Coordinates)
+		felt := v.Properties["felt"]
+		if felt != nil {
+			if felt.(float64) == 1 {
+				fmt.Println(v.Properties["place"], felt, "time")
+			} else if felt.(float64) > 1 {
+				fmt.Println(v.Properties["place"], felt, "times")
+			}
+		}
 	}
-	return coord
+	fmt.Println()
+}
 
+func(e earthquake)getCoordinates(){
+	for _, v := range e.Features {
+		fmt.Println(v.Geometry.Coordinates)
+	}
 }
 
 
@@ -64,36 +75,29 @@ func main() {
 	defer resp.Body.Close()
 
 	var record earthquake
+	if resp.StatusCode == 200 {
+		err = json.NewDecoder(resp.Body).Decode(&record)
 
-	err = json.NewDecoder(resp.Body).Decode(&record)
-	if err != nil {
-		fmt.Println(err)
+		if err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		fmt.Println(resp.StatusCode, "error received from the server.", )
+		resp.Body.Close()
+		return
 	}
+
 	
+	record.getMetadata("title")
 
-	fmt.Println(record.getMetadata("title"))
+	record.getMetadata("count")
 
-	fmt.Println(record.getMetadata("count"))
+	record.getPlaces()
 
-	fmt.Println(record.getPlaces())
+	record.getMagnitude(4)
 
-	fmt.Println(record.getCoordinates())
+	record.getFelt()
 
-	fmt.Println(record.getMagnitude(4))
-
-	// for _, v := range record.Features {
-	// 	felt := v.Properties["felt"]
-	// 	if felt != nil {
-	// 		if felt.(float64) == 1 {
-	// 			fmt.Println(v.Properties["place"], felt, "time")
-	// 		} else if felt.(float64) > 1 {
-	// 			fmt.Println(v.Properties["place"], felt, "times")
-	// 		}
-	// 	}
-	// }
-	// fmt.Printf("-----------------------\n\n")
-
-
-
+	record.getCoordinates()
 
 }

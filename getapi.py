@@ -18,17 +18,17 @@ def printResults(data):
         print(i["properties"]["place"])
     print("--------------------\n")
 
-    # for i in theJSON["features"]:
-    #     if i["properties"]["mag"] >= 4.0:
-    #         print(i["properties"]["place"])
-    # print("--------------------\n")
+    for i in theJSON["features"]:
+        if i["properties"]["mag"] >= 4.0:
+            print(i["properties"]["place"])
+    print("--------------------\n")
 
-    # for i in theJSON["features"]:
-    #     felt = i["properties"]["felt"]
-    #     if felt != None:
-    #         if felt > 0:
-    #             print(i["properties"]["place"], felt,"times")
-    # print("--------------------\n")
+    for i in theJSON["features"]:
+        felt = i["properties"]["felt"]
+        if felt != None:
+            if felt > 0:
+                print(i["properties"]["place"], felt,"times")
+    print("--------------------\n")
 
 webUrl = urllib.request.urlopen(urlData)
 print ("result code:" + str(webUrl.getcode()))
