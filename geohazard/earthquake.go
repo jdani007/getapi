@@ -24,7 +24,6 @@ func (e Earthquake) GetPlaces() {
 	for _, v := range e.Features {
 		fmt.Println(v.Properties["place"].(string))
 	}
-	fmt.Println()
 }
 
 func (e Earthquake) GetCoordinates() {
@@ -39,7 +38,6 @@ func (e Earthquake) GetMagnitude(mag float64) {
 			fmt.Println(v.Properties["place"].(string))
 		}
 	}
-	fmt.Println()
 }
 
 func (e Earthquake) GetFelt() {
@@ -53,5 +51,4 @@ func (e Earthquake) GetFelt() {
 			}
 		}
 	}
-	fmt.Println()
 }
