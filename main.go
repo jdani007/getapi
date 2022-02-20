@@ -19,7 +19,7 @@ func main() {
 	if resp.StatusCode == 200 {
 		err = json.NewDecoder(resp.Body).Decode(&record)
 		if err != nil {
-			fmt.Println(err)
+			panic(err)
 		}
 	} else {
 		fmt.Println(resp.StatusCode, "error received from the server.")
@@ -27,9 +27,9 @@ func main() {
 		return
 	}
 
-	record.GetMetadata("title")
+	fmt.Println(record.GetMetadata("title"))
 
-	record.GetMetadata("count")
+	fmt.Println(record.GetMetadata("count"))
 
 	record.GetPlaces()
 
