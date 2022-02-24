@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	"github.com/james-daniels/getapi/geohazard"
 )
 
 func main() {
@@ -15,7 +13,7 @@ func main() {
 	}
 	defer resp.Body.Close()
 
-	var record geohazard.Earthquake
+	var record earthquake
 	if resp.StatusCode == 200 {
 		err = json.NewDecoder(resp.Body).Decode(&record)
 		if err != nil {
@@ -27,16 +25,15 @@ func main() {
 		return
 	}
 
-	fmt.Println(record.GetMetadata("title"))
+	fmt.Println(record.getMetadata("title"))
 
-	fmt.Println(record.GetMetadata("count"))
+	fmt.Println(record.getMetadata("count"))
 
-	record.GetPlaces()
+	record.getPlaces()
 
-	record.GetMagnitude(4)
+	record.getMagnitude(4)
 
-	record.GetFelt()
+	record.getFelt()
 
-	record.GetCoordinates()
-
+	record.getCoordinates()
 }
